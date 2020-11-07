@@ -12,15 +12,18 @@ ros::Publisher motor_command_publisher;
 bool handle_drive_request(ball_chaser::DriveToTarget::Request& req,
     ball_chaser::DriveToTarget::Response& res)
 {   
+    ROS_INFO("DriveToTargetRequest received - lx:%1.2f, Az:%1.2f", (float)req.linear_x, (float)req.angular_z);
     
         // Create a motor_command object of type geometry_msgs::Twist
     geometry_msgs::Twist motor_command;
         // Set wheel velocities, forward [0.5, 0.0]
-    motor_command.linear.x = 0.5;
-    motor_command.angular.z = 0.0;
+    motor_command.linear.x = linear_x[0];
+    motor_command.angular.z = angular_z[1];
         // Publish angles to drive the robot
     motor_command_publisher.publish(motor_command);
-    
+
+    res.msg_feedback = "Wheel velocities set - lx: " + std::to_string(linear_x[0]) + " , Az: " + std::to_string(angular_z[1]);
+    ROS_INFO_STREAM(res.msg_feedback);
     return true;
 
 }
